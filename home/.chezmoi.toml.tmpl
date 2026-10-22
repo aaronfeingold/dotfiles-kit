@@ -12,3 +12,12 @@
 [git]
   # `chezmoi add` / `chezmoi re-add` don't commit automatically; review with `chezmoi git diff` first.
   autoCommit = false
+
+[edit]
+{{- if $headless }}
+  command = "nvim"
+{{- else }}
+  # --wait so chezmoi applies after you close the tab, not instantly
+  command = "code"
+  args = ["--wait"]
+{{- end }}

@@ -51,6 +51,16 @@ home/                       chezmoi source (see .chezmoiroot)
 
 chezmoi naming: `dot_x` → `.x`, `private_x` → mode 0700/0600, `.tmpl` → rendered as a [Go template](https://www.chezmoi.io/user-guide/templating/).
 
+## Shortcuts (in the included `.zshrc`)
+
+| Type | Does |
+|---|---|
+| `zrc` / `trc` / `vrc` / `nrc` / `crc` | edit zshrc / tmux.conf / vimrc / nvim / Claude settings, apply, reload |
+| `dots` | cd into your dotfiles repo |
+| `dsync [msg]` | commit + push everything |
+
+The editor is VS Code (`code --wait`) on desktops and `nvim` on headless machines; change `[edit]` in `home/.chezmoi.toml.tmpl`.
+
 ## Adding your files
 
 ```sh

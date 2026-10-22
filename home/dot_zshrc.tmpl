@@ -20,6 +20,17 @@ autoload -Uz compinit && compinit
 command -v fzf >/dev/null && source <(fzf --zsh 2>/dev/null)
 
 alias cz=chezmoi
+
+# Dotfile shortcuts: edit via chezmoi (saves to the repo + applies), then reload
+function zrc { chezmoi edit --apply ~/.zshrc && source ~/.zshrc }
+function trc { chezmoi edit --apply ~/.tmux.conf && { [ -z "$TMUX" ] || tmux source-file ~/.tmux.conf } }
+function vrc { chezmoi edit --apply ~/.vimrc }
+function nrc { chezmoi edit --apply ~/.config/nvim }
+function crc { chezmoi edit --apply ~/.claude/settings.json }
+# dots: cd into the dotfiles repo; dsync [msg]: commit + push all changes
+alias dots="chezmoi cd"
+function dsync { chezmoi git -- add -A && chezmoi git -- commit -m "${*:-update dotfiles}" && chezmoi git -- push }
+
 alias vim=nvim
 
 # Machine-specific settings and secrets. Not tracked by chezmoi.
