@@ -13,7 +13,7 @@ eval "$({{ $brewPrefix }}/bin/brew shellenv)"
 
 echo "==> brew bundle"
 # A single broken/renamed package shouldn't stop your dotfiles from being applied.
-brew bundle --file=/dev/stdin <<EOF || echo "WARNING: some packages failed to install (see above)" >&2
+brew bundle --no-upgrade --file=/dev/stdin <<EOF || echo "WARNING: some packages failed to install (see above)" >&2
 {{ range .packages.darwin.brews -}}
 brew {{ . | quote }}
 {{ end -}}
