@@ -30,13 +30,15 @@ sudo=""
 pkgs=({{ .packages.linux.system | join " " }})
 
 if command -v apt-get >/dev/null; then
-  $sudo apt-get update -qq
+  $sudo apt-get update -qq || true
   # Install one at a time so a missing package doesn't block the rest.
   for p in "${pkgs[@]}"; do
+    dpkg -s "$p" >/dev/null 2>&1 && continue
     $sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y -qq "$p" || echo "WARNING: failed to install $p" >&2
   done
 elif command -v dnf >/dev/null; then
   for p in "${pkgs[@]}"; do
+    rpm -q "$p" >/dev/null 2>&1 && continue
     $sudo dnf install -y -q "$p" || echo "WARNING: failed to install $p" >&2
   done
 else
