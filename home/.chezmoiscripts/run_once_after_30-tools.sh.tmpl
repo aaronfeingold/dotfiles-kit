@@ -1,0 +1,16 @@
+#!/bin/bash
+# One-time setup that isn't a package.
+set -euo pipefail
+
+# tmux plugin manager (press prefix + I inside tmux to install plugins)
+if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
+  git clone --depth 1 https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+fi
+
+# Claude Code CLI
+if ! command -v claude >/dev/null && [ ! -x "$HOME/.local/bin/claude" ]; then
+  curl -fsSL https://claude.ai/install.sh | bash
+fi
+
+# Scan commits in this dotfiles repo for secrets (uses gitleaks when installed).
+git -C {{ .chezmoi.sourceDir | quote }} config core.hooksPath .githooks

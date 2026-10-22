@@ -1,0 +1,14 @@
+{{- /* Asked once per machine on `chezmoi init`; answers live in ~/.config/chezmoi/chezmoi.toml.
+       Non-interactive: --promptString "Git name=..." --promptString "Git email=..." --promptBool "Headless machine=true" */ -}}
+{{- $name := promptStringOnce . "name" "Git name" -}}
+{{- $email := promptStringOnce . "email" "Git email" -}}
+{{- $headless := promptBoolOnce . "headless" "Headless machine" -}}
+
+[data]
+  name = {{ $name | quote }}
+  email = {{ $email | quote }}
+  headless = {{ $headless }}
+
+[git]
+  # `chezmoi add` / `chezmoi re-add` don't commit automatically; review with `chezmoi git diff` first.
+  autoCommit = false

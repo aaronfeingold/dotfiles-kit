@@ -1,0 +1,12 @@
+[user]
+  name = {{ .name }}
+  email = {{ .email }}
+[init]
+  defaultBranch = main
+[pull]
+  rebase = true
+[push]
+  autoSetupRemote = true
+# Machine-specific overrides (work email, signing keys). Not tracked by chezmoi.
+[include]
+  path = ~/.gitconfig.local

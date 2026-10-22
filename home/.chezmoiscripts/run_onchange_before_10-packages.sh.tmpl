@@ -1,0 +1,45 @@
+#!/bin/bash
+# Re-runs whenever the rendered package list changes.
+set -euo pipefail
+
+{{ if eq .chezmoi.os "darwin" -}}
+{{-   $brewPrefix := "/usr/local" -}}
+{{-   if eq .chezmoi.arch "arm64" }}{{ $brewPrefix = "/opt/homebrew" }}{{ end -}}
+if [ ! -x "{{ $brewPrefix }}/bin/brew" ]; then
+  echo "==> installing Homebrew"
+  NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+eval "$({{ $brewPrefix }}/bin/brew shellenv)"
+
+echo "==> brew bundle"
+# A single broken/renamed package shouldn't stop your dotfiles from being applied.
+brew bundle --file=/dev/stdin <<EOF || echo "WARNING: some packages failed to install (see above)" >&2
+{{ range .packages.darwin.brews -}}
+brew {{ . | quote }}
+{{ end -}}
+{{ if not .headless -}}
+{{   range .packages.darwin.casks -}}
+cask {{ . | quote }}
+{{   end -}}
+{{ end -}}
+EOF
+
+{{ else if eq .chezmoi.os "linux" -}}
+sudo=""
+[ "$(id -u)" -ne 0 ] && sudo="sudo"
+pkgs=({{ .packages.linux.system | join " " }})
+
+if command -v apt-get >/dev/null; then
+  $sudo apt-get update -qq
+  # Install one at a time so a missing package doesn't block the rest.
+  for p in "${pkgs[@]}"; do
+    $sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y -qq "$p" || echo "WARNING: failed to install $p" >&2
+  done
+elif command -v dnf >/dev/null; then
+  for p in "${pkgs[@]}"; do
+    $sudo dnf install -y -q "$p" || echo "WARNING: failed to install $p" >&2
+  done
+else
+  echo "no apt-get or dnf found; install manually: ${pkgs[*]}" >&2
+fi
+{{ end -}}

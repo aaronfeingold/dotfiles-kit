@@ -1,0 +1,26 @@
+# Managed by chezmoi. Edit with `chezmoi edit ~/.zshrc`.
+
+{{ if eq .chezmoi.os "darwin" -}}
+{{-   if eq .chezmoi.arch "arm64" -}}
+eval "$(/opt/homebrew/bin/brew shellenv)"
+{{-   else -}}
+eval "$(/usr/local/bin/brew shellenv)"
+{{-   end }}
+{{ end -}}
+export PATH="$HOME/.local/bin:$PATH"
+export EDITOR=nvim
+
+HISTFILE=~/.zsh_history
+HISTSIZE=50000
+SAVEHIST=50000
+setopt SHARE_HISTORY HIST_IGNORE_DUPS
+
+autoload -Uz compinit && compinit
+
+command -v fzf >/dev/null && source <(fzf --zsh 2>/dev/null)
+
+alias cz=chezmoi
+alias vim=nvim
+
+# Machine-specific settings and secrets. Not tracked by chezmoi.
+[ -f ~/.zshrc.local ] && source ~/.zshrc.local

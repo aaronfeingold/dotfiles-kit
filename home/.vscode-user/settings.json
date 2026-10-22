@@ -1,0 +1,7 @@
+{
+  "editor.formatOnSave": true,
+  "editor.minimap.enabled": false,
+  "files.trimTrailingWhitespace": true,
+  "terminal.integrated.defaultProfile.osx": "zsh",
+  "terminal.integrated.defaultProfile.linux": "zsh"
+}

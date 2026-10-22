@@ -1,0 +1,37 @@
+name: test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: shellcheck install.sh .githooks/pre-commit
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  apply:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: install
+        run: |
+          sh install.sh "file://$GITHUB_WORKSPACE" \
+            --promptString "Git name=CI" \
+            --promptString "Git email=ci@example.com" \
+            --promptBool "Headless machine=true"
+      - name: verify
+        run: |
+          ~/.local/bin/chezmoi verify
+          test -f ~/.zshrc && test -f ~/.tmux.conf && test -f ~/.claude/settings.json
+          command -v tmux

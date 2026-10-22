@@ -1,0 +1,7 @@
+# Default gitleaks rules, minus known false positives.
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "VS Code keybindings: \"key\": \"ctrl+shift+...\" looks like an API key but isn't"
+paths = ['''\.vscode-user/keybindings\.json$''']

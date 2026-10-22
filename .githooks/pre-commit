@@ -1,0 +1,6 @@
+#!/bin/sh
+# Block commits that contain secrets. Keep secrets in ~/.zshrc.local or a password manager instead.
+if command -v gitleaks >/dev/null 2>&1; then
+  exec gitleaks git --pre-commit --staged --redact --no-banner
+fi
+echo "warning: gitleaks not installed; commit not scanned for secrets" >&2

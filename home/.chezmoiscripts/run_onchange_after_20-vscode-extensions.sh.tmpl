@@ -1,0 +1,21 @@
+{{ if not .headless -}}
+#!/bin/bash
+# Re-runs whenever the extension list changes. Installs, never uninstalls.
+set -euo pipefail
+
+code=$(command -v code || true)
+for candidate in \
+  "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code" \
+  /usr/bin/code /snap/bin/code; do
+  if [ -z "$code" ] && [ -x "$candidate" ]; then code="$candidate"; fi
+done
+
+if [ -z "$code" ]; then
+  echo "VS Code CLI not found; skipping extensions" >&2
+  exit 0
+fi
+
+{{ range .vscode.extensions -}}
+"$code" --install-extension {{ . | quote }} || echo "WARNING: failed to install {{ . }}" >&2
+{{ end -}}
+{{ end -}}

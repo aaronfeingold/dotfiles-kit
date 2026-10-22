@@ -1,0 +1,31 @@
+# Everything this machine should have installed. Edit freely;
+# the install scripts re-run automatically when this file changes.
+packages:
+  darwin:
+    brews:
+      - git
+      - gitleaks
+      - tmux
+      - neovim
+      - ripgrep
+      - fzf
+      - jq
+    casks: # skipped on headless machines
+      - ghostty
+      - visual-studio-code
+  linux:
+    # Installed with apt or dnf, whichever exists.
+    system:
+      - git
+      - tmux
+      - vim
+      - ripgrep
+      - fzf
+      - jq
+      - curl
+      - zsh
+
+vscode:
+  extensions:
+    - anthropic.claude-code
+    - vscodevim.vim
